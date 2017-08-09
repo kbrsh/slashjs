@@ -1,8 +1,8 @@
 {
   "name": "slashjs",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Slash Hash Function",
-  "main": "index.js",
+  "main": "dist/slash.min.js",
   "scripts": {
     "build": "gulp",
     "test": "node test/test.js"

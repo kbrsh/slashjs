@@ -1,5 +1,5 @@
 /**
- * Slash v0.1.0
+ * Slash v1.0.0
  * Copyright 2017 Kabir Shah
  * Released under the MIT License
  * https://github.com/kbrsh/slashjs
@@ -90,14 +90,14 @@
     }
     
     var pad = function (str) {
-    	var length = str.length;
+      var length = str.length;
       if(str.length === 32) {
-      	return str;
+        return str;
       } else {
-      	var diff = 32 - length;
-      	var padded = "";
+        var diff = 32 - length;
+        var padded = "";
         for(var i = 0; i < diff; i++) {
-        	padded += "0";
+          padded += "0";
         }
         padded += str;
         return padded;
@@ -105,69 +105,69 @@
     }
     
     var padRight = function (str, amount) {
-    	for(var i = 0; i < amount; i++) {
-    		str += "0";
-    	}
+      for(var i = 0; i < amount; i++) {
+        str += "0";
+      }
     
-    	return str;
+      return str;
     }
     
     var wrap = function (str) {
-    	var result = 0;
+      var result = 0;
     
-    	for(var i = 0; i < str.length; i++) {
-    		result = ((result * 2) + (baseToInt[str[i]])) % max;
-    	}
+      for(var i = 0; i < str.length; i++) {
+        result = ((result * 2) + (baseToInt[str[i]])) % max;
+      }
     
-    	return result;
+      return result;
     }
     
     function Long(high, low) {
       this.high = high;
       this.low = low;
     
-    	this.__long__ = true;
+      this.__long__ = true;
     
       return this;
     }
     
     Long.prototype.or = function(value) {
-    	if(value.__long__ === undefined) {
-    		value = new Long(0, value);
-    	}
+      if(value.__long__ === undefined) {
+        value = new Long(0, value);
+      }
     
       return new Long((this.high | value.high) >>> 0, (this.low | value.low) >>> 0);
     }
     
     Long.prototype.xor = function(value) {
-    	if(value.__long__ === undefined) {
-    		value = new Long(0, value);
-    	}
+      if(value.__long__ === undefined) {
+        value = new Long(0, value);
+      }
     
       return new Long((this.high ^ value.high) >>> 0, (this.low ^ value.low) >>> 0);
     }
     
     Long.prototype.shiftLeft = function(value) {
-    	if(value < 32) {
-    		var shiftedHigh = (this.high << value) >>> 0;
-    		var shiftedLow = (this.low << value) >>> 0;
+      if(value < 32) {
+        var shiftedHigh = (this.high << value) >>> 0;
+        var shiftedLow = (this.low << value) >>> 0;
     
-    		if(shiftedHigh < 0) {
-    			shiftedHigh = wrap(padRight(this.high.toString(2), value));
-    		}
+        if(shiftedHigh < 0) {
+          shiftedHigh = wrap(padRight(this.high.toString(2), value));
+        }
     
-    		if(shiftedLow < 0) {
-    			shiftedLow = wrap(padRight(this.low.toString(2), value));
-    		}
+        if(shiftedLow < 0) {
+          shiftedLow = wrap(padRight(this.low.toString(2), value));
+        }
     
         return new Long((shiftedHigh) | (this.low >>> (32 - value)), shiftedLow);
       } else {
-    		var shiftBy = value - 32;
-    		var shiftedLow$1 = (this.low << shiftBy) >>> 0;
+        var shiftBy = value - 32;
+        var shiftedLow$1 = (this.low << shiftBy) >>> 0;
     
-    		if(shiftedLow$1 < 0) {
-    			shiftedLow$1 = wrap(padRight(this.low.toString(2), shiftBy));
-    		}
+        if(shiftedLow$1 < 0) {
+          shiftedLow$1 = wrap(padRight(this.low.toString(2), shiftBy));
+        }
     
         return new Long(shiftedLow$1, 0);
       }
@@ -178,12 +178,12 @@
     }
     
     Long.prototype.rotateRight = function(value) {
-    	return this.shiftRight(value).or(this.shiftLeft(64 - value));
+      return this.shiftRight(value).or(this.shiftLeft(64 - value));
     }
     
     Long.prototype.toString = function(radix) {
       if(radix === undefined) {
-      	radix = 10;
+        radix = 10;
       }
     
       var binary = pad(this.high.toString(2)) + pad(this.low.toString(2));
@@ -196,15 +196,15 @@
       var remainder = 0;
     
       while(binary.length !== 0) {
-      	remainder = 0;
-      	end = [];
-      	for(i = 0; i < binary.length; i++) {
-        	bit = baseToInt[binary[i]];
+        remainder = 0;
+        end = [];
+        for(i = 0; i < binary.length; i++) {
+          bit = baseToInt[binary[i]];
           calc = bit + (remainder * 2);
-        	quotient = (calc / radix) | 0;
+          quotient = (calc / radix) | 0;
           remainder = calc % radix;
           if((end.length !== 0) || (quotient !== 0)) {
-          	end.push(quotient);
+            end.push(quotient);
           }
         }
         binary = end;
