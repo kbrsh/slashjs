@@ -73,6 +73,10 @@ function Long(high, low) {
   return this;
 }
 
+Long.prototype.xor = function(value) {
+  return new Long((this.high ^ value.high) >>> 0, (this.low ^ value.low) >>> 0);
+}
+
 Long.prototype.toString = function(radix) {
   const binary = pad(this.high.toString(2)) + pad(this.low.toString(2));
   const resultLength = (((64 * Math.log(2)) / Math.log(radix)) | 0) + 1;
@@ -99,23 +103,25 @@ Long.prototype.toString = function(radix) {
   return result;
 }
 
+const prime = new Long(2708537859, 353567233);
+const rotate = new Long(0, 7);
+
 const Slash = (key, radix) => {
   if(radix === undefined) {
     radix = 36;
   }
 
   let result = new Long(0, 0);
-  let i = 0;
   let bytes = key;
 
   if(typeof key === "string") {
-    for(; i < key.length; i++) {
-      bytes[i] = key.charCodeAt(i);
+    for(let i = 0; i < key.length; i++) {
+      bytes[i] = new Long(0, key.charCodeAt(i));
     }
   }
 
-  for(i = 0; i < bytes.length; i++) {
-    result = result.xor(bytes[i]).multiply(prime).rotateRight(7);
+  for(let i = 0; i < bytes.length; i++) {
+    result = result.xor(bytes[i]).multiply(prime).rotateRight(rotate);
   }
 
   return result.toString(radix);
