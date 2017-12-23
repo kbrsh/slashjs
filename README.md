@@ -1,6 +1,6 @@
 # Slash
 
-A fast, efficient hash ported to Javascript.
+A fast, efficient hash in Javascript.
 
 ### Usage
 
